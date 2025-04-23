@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pedestrian Detection</title>
+</head>
+<body>
+    <h1>Upload an Image</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="uploadImage()">Check for Pedestrian</button>
+    <div id="result"></div>
+
+    <script>
+        function uploadImage() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+            
+            if (!fileInput.files[0]) {
+                resultDiv.innerHTML = "Please select an image.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.innerHTML = data.result;
+            })
+            .catch(error => {
+                resultDiv.innerHTML = "Error: " + error.message;
+            });
+        }
+    </script>
+</body>
+</html>
